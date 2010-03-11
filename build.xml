@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="blender" default="compile">
+	<property name="ivy.install.version" value="2.1.0"/>
+	<property name="ivy.jar.file" value="ivy.jar" />
+	<property name="src.dir" value="src" />
+	<property name="resources.dir" value="resources" />
+	<property name="build.dir" value="build" />
+	<property name="build.lib.dir" value="lib" />
+	<property name="runtime.lib.dir" value="WebContent/WEB-INF/lib" />
+	<property name="dist.war.file" value="blender.war" />
+
+	<path id="build.path.id">
+		<fileset dir="${build.lib.dir}" />
+	</path>
+
+	<target name="get-ivy">
+		<get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.jar.file}" />
+	</target>
+	
+	<target name="resolve" depends="get-ivy">
+		<ivy:retrieve sync="true" />
+
+		<!-- Copy libraries to WEB-INF/lib -->
+		<sync todir="${runtime.lib.dir}">
+			<fileset dir="${build.lib.dir}">
+				<include name="*" />
+				
+				<!-- The application server provides these libraries -->
+				<exclude name="com.springsource.javax.el-*.jar" />
+				<exclude name="com.springsource.javax.servlet-*.jar" />
+				<exclude name="com.springsource.javax.servlet.jsp-*.jar" />
+			</fileset>
+		</sync>
+	</target>
+
+	<target name="compile" depends="resolve">
+		<mkdir dir="${build.dir}" />
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.path.id" />
+	</target>
+	
+	<target name="resources" depends="compile">
+		<copy todir="${build.dir}">
+			<fileset dir="${resources.dir}" />
+		</copy>
+	</target>
+	
+	<target name="war" depends="resources">
+		<war destfile="${dist.war.file}">
+			<fileset dir="WebContent" />
+			<zipfileset dir="build" prefix="WEB-INF/classes" />
+		</war>
+	</target>
+	
+	<target name="clean">
+		<delete file="${dist.war.file}" />
+		<delete dir="${build.dir}" />
+		<delete dir="${runtime.lib.dir}" />
+		<delete dir="${build.lib.dir}" />
+		<delete file="${ivy.jar.file}" />
+	</target>
+</project>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd"
+	version="2.0">
+
+	<info organisation="com.thestaticvoid" module="blender" />
+
+	<dependencies>
+		<dependency org="org.tuckey" name="com.springsource.org.tuckey.web.filters.urlrewrite" rev="3.1.0" />
+		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.1.RELEASE-A" />
+	</dependencies>
+</ivy-module>
