@@ -17,4 +17,7 @@
 
 	<!-- Configures Spring MVC -->
 	<import resource="mvc-config.xml" />
+	
+	<!-- Configures Spring ORM -->
+	<import resource="orm-config.xml" />
 </beans>

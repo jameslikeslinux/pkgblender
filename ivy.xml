@@ -8,5 +8,8 @@
 	<dependencies>
 		<dependency org="org.tuckey" name="com.springsource.org.tuckey.web.filters.urlrewrite" rev="3.1.0" />
 		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.1.RELEASE-A" />
+		<dependency org="org.springframework" name="org.springframework.orm" rev="3.0.1.RELEASE-A" />
+		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.10" />
+		<dependency org="org.slf4j" name="com.springsource.slf4j.log4j" rev="1.5.10" />
 	</dependencies>
 </ivy-module>
