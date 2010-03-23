@@ -6,7 +6,7 @@
 	<property name="resources.dir" value="resources" />
 	<property name="build.dir" value="build" />
 	<property name="build.lib.dir" value="lib" />
-	<property name="runtime.lib.dir" value="WebContent/WEB-INF/lib" />
+	<property name="runtime.lib.dir" value="webapp/WEB-INF/lib" />
 	<property name="dist.war.file" value="blender.war" />
 
 	<path id="build.path.id">
@@ -19,13 +19,11 @@
 	</target>
 	
 	<target name="resolve" depends="get-ivy">
-		<ivy:retrieve sync="true" />
+		<ivy:retrieve type="jar" sync="true" />
 
 		<!-- Copy libraries to WEB-INF/lib -->
 		<sync todir="${runtime.lib.dir}">
 			<fileset dir="${build.lib.dir}">
-				<include name="*" />
-				
 				<!-- The application server provides these libraries -->
 				<exclude name="com.springsource.javax.el-*.jar" />
 				<exclude name="com.springsource.javax.servlet-*.jar" />
@@ -47,7 +45,7 @@
 	
 	<target name="war" depends="resources">
 		<war destfile="${dist.war.file}">
-			<fileset dir="WebContent" />
+			<fileset dir="webapp" />
 			<zipfileset dir="build" prefix="WEB-INF/classes" />
 		</war>
 	</target>
