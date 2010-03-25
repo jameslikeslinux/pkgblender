@@ -13,4 +13,10 @@
 	<context:component-scan base-package="com.thestaticvoid.blender.service" />
 	
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+	
+	<bean id="reCaptcha" class="net.tanesha.recaptcha.ReCaptchaImpl">
+		<property name="publicKey" value="6Lda9QsAAAAAAMSig-iP7-W3oOHtD7MIlmQeyk5S" />
+		<property name="privateKey" value="6Lda9QsAAAAAAPuxRNyZhgK2IqQpciDwjRqwbvzT" />
+		<property name="includeNoscript" value="true" />
+	</bean>
 </beans>

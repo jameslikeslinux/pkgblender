@@ -73,8 +73,7 @@
 		<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
 		<url-pattern>/app/*</url-pattern>
 	</servlet-mapping>
-
-
+	
 	<jsp-config>
 		<jsp-property-group>
 			<url-pattern>*.jsp</url-pattern>

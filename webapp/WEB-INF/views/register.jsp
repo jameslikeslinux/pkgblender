@@ -7,7 +7,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:import url="header.jsp">
-	<c:param name="title">Hi</c:param>
+	<c:param name="title">Create Account</c:param>
 	<c:param name="scripts">/blender/scripts/jquery.validate.js /blender/messages.js /blender/scripts/register.js</c:param>
 </c:import>
 
@@ -120,9 +120,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2" style="text-align: center" ><br /><input type="submit" value="Register" /></td>
+			<td colspan="2" id="form-submit" ><br /><input type="submit" value="Register" /></td>
 		</tr>
 	</table>
 </form:form>
 
-<%@ include file="footer.jsp" %>
+<c:import url="footer.jsp" />
