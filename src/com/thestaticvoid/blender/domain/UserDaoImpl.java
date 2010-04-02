@@ -27,18 +27,34 @@ public class UserDaoImpl implements UserDao {
 	
 	@Transactional(readOnly = true)
 	public User getByEmail(String email) {
-		Query query = entityManager.createQuery("from User where email=?1 and emailValid=true");
+		Query query = entityManager.createQuery("from User where email=?1");
 		query.setParameter(1, email);
 		
 		try {
-			return (User) query.getSingleResult();
+			for (Object result : query.getResultList()) {
+				User user = (User) result;
+				if (user.isEmailValid())
+					return user;
+			}
 		} catch (NoResultException nre) {
-			return null;
+			// empty
 		}
+		
+		return null;
+	}
+	
+	@Transactional(readOnly = true)
+	public User get(int id) {
+		return entityManager.find(User.class, id);
 	}
 	
 	@Transactional
 	public void store(User user) {
-		entityManager.merge(user);
+		entityManager.persist(user);
+	}
+	
+	@Transactional(readOnly = true)
+	public void refresh(User user) {
+		entityManager.refresh(user);
 	}
 }

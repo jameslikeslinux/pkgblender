@@ -41,4 +41,6 @@
 	
 	<mvc:view-controller path="/" view-name="home" />
 	<mvc:view-controller path="/messages.js" view-name="messages.js" />
+	<mvc:view-controller path="/registerSuccess" view-name="registerSuccess" />
+	<mvc:view-controller path="/emailVerificationSent" view-name="emailVerificationSent" />
 </beans>

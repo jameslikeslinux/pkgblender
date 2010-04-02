@@ -16,5 +16,6 @@
 		<dependency org="org.springframework.security" name="org.springframework.security.taglibs" rev="3.0.2.RELEASE" />
 		<dependency org="org.hibernate" name="com.springsource.org.hibernate.validator" rev="4.0.0.GA" />
 		<dependency org="net.tanesha.recaptcha4j" name="recaptcha4j" rev="0.0.7" />
+		<dependency org="javax.mail" name="mail" rev="1.4.3" />
 	</dependencies>
 </ivy-module>

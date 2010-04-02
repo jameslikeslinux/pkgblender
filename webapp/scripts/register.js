@@ -29,7 +29,7 @@ $(document).ready(function() {
 			username: {
 				required: true,
 				unixusername: true,
-				remote: "/blender/register/checkUsernameAvailable"
+				remote: "/blender/checkUsernameAvailable"
 			},
 			
 			password: {
@@ -50,7 +50,7 @@ $(document).ready(function() {
 			email: {
 				required: true,
 				email: true,
-				remote: "/blender/register/checkEmailNotRegistered"
+				remote: "/blender/checkEmailNotRegistered"
 			}
 		},
 		
@@ -87,7 +87,7 @@ $(document).ready(function() {
 			element.parent().next().html('<img src="/blender/images/invalid.png" />');
 			error.appendTo(element.parent().next());
 		},
-		
+
 		success: function(label) {
 			label.parent().html('<img src="/blender/images/ok.png" />');
 		}
@@ -108,7 +108,7 @@ $(document).ready(function() {
 				
 			var valid = $.ajax({
 				async: false,
-				url: "/blender/register/checkReCaptchaValid",
+				url: "/blender/checkReCaptchaValid",
 				data: "challenge=" + challenge + "&response=" + response
 			}).responseText;
 			

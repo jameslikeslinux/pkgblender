@@ -19,4 +19,8 @@
 		<property name="privateKey" value="6Lda9QsAAAAAAPuxRNyZhgK2IqQpciDwjRqwbvzT" />
 		<property name="includeNoscript" value="true" />
 	</bean>
+	
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="localhost" />
+	</bean>
 </beans>

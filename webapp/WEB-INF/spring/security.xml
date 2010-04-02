@@ -10,6 +10,8 @@
     <security:global-method-security pre-post-annotations="enabled" />
 
 	<security:http auto-config="false" entry-point-ref="loginUrlAuthenticationEntryPoint" use-expressions="true">
+		<security:intercept-url pattern="/resendEmailVerification" access="isAuthenticated()" />
+		<security:intercept-url pattern="/verifyEmail" access="isAuthenticated()" />
 		<security:intercept-url pattern="/**" filters="none" />
 		<security:custom-filter position="FORM_LOGIN_FILTER" ref="reCaptchaAuthenticationFilter" />
 		<security:custom-filter position="REMEMBER_ME_FILTER" ref="rememberMeFilter" />
@@ -44,7 +46,7 @@
 		<property name="userDetailsService" ref="userService"/>
 		<property name="cookieName" value="REMEMBER_ME_TOKEN" />
 		<property name="parameter" value="rememberMe" />
-		<property name="key" value="foobar" />
+		<property name="key" value="foobar" /> 
 	</bean>
 	
 	<bean id="tokenRepository" class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">

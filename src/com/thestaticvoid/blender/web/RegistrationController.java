@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.thestaticvoid.blender.service.EmailVerificationException;
 import com.thestaticvoid.blender.service.RegistrationException;
 import com.thestaticvoid.blender.service.UserService;
 
 @Controller
-@RequestMapping("/register")
 public class RegistrationController {
 	private UserService userService;
 	private ReCaptcha reCaptcha;
@@ -35,14 +35,14 @@ public class RegistrationController {
 		this.messageSource = messageSource;
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public void register(Model model, HttpSession session) {
 		model.addAttribute(new RegistrationForm());
 		model.addAttribute("reCaptchaHtml", reCaptcha.createRecaptchaHtml(null, null));
 		session.removeAttribute("isHuman");
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(RegistrationForm registrationForm,
 			BindingResult result,
 			@RequestParam(value = "recaptcha_challenge_field", required = false) String challenge,
@@ -123,5 +123,22 @@ public class RegistrationController {
 		}
 
 		return false;
+	}
+	
+	@RequestMapping("/resendEmailVerification")
+	public String resendEmailVerification() {
+		userService.resendEmailVerification();
+		return "redirect:emailVerificationSent";
+	}
+	
+	@RequestMapping("/verifyEmail")
+	public void verifyEmail(String token, Model model) {
+		model.addAttribute("message", "email.verification.success");
+		
+		try {
+			userService.verifyEmail(token);
+		} catch (EmailVerificationException eve) {
+			model.addAttribute("message", eve.getMessage());
+		}		
 	}
 }
