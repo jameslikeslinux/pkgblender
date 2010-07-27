@@ -186,6 +186,7 @@ public class UserServiceImpl implements UserService {
 		// the validation was successful so remove the token from the database
 		// and the cached user (in the Spring SecurityContext)
 		emailValidationTokenDao.remove(user.getEmailValidationToken());
+		user.setEmailValidationToken(null);
 		Utils.getCachedUser().setEmailValidationToken(null);
 	}
 

@@ -5,19 +5,22 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.CollectionOfElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,35 +30,39 @@ public class User implements UserDetails {
 	private static final long serialVersionUID = 4451597884273035934L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int id;
 
-	@Column(length = 8, nullable = false, unique = true)
+	@Column(name = "username", length = 8, nullable = false, unique = true)
 	private String username;
 	
-	@Column(nullable = false)
+	@Column(name = "password", nullable = false)
 	private String password;
 	
-	@Column(nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;
 	
-	@Column(nullable = false)
+	@Column(name = "email", nullable = false)
 	private String email;
 	
 	@OneToOne(mappedBy = "user")
 	private EmailValidationToken emailValidationToken;
 	
+	@Column(name = "enabled")
 	private boolean enabled = true;
 	
-	@CollectionOfElements(fetch = FetchType.EAGER)
-	@JoinTable(joinColumns = @JoinColumn(name = "user_id", nullable = false))
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", nullable = false))
 	@Column(name = "role")
 	@Enumerated(EnumType.STRING)
 	private Set<Role> roles;
 	
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creation_date", updatable = false)
 	private Date creationDate = new Date();
 	
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_login")
 	private Date lastLogin;
 	
@@ -120,7 +127,7 @@ public class User implements UserDetails {
 	}
 
 	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+		this.roles = new HashSet<Role>(roles);
 	}
 
 	public Date getCreationDate() {

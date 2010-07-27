@@ -14,6 +14,7 @@ public class EmailValidationTokenDaoImpl implements EmailValidationTokenDao {
 	@Transactional
 	public void store(EmailValidationToken emailValidationToken) {
 		entityManager.persist(emailValidationToken);
+		entityManager.flush();
 	}
 	
 	@Transactional

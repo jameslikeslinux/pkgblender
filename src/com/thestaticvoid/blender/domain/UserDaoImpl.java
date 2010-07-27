@@ -15,7 +15,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Transactional(readOnly = true)
 	public User getByUsername(String username) {
-		Query query = entityManager.createQuery("from User where username=?1");
+		Query query = entityManager.createQuery("SELECT u FROM User u WHERE u.username=?1");
 		query.setParameter(1, username);
 		
 		try {
@@ -27,7 +27,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Transactional(readOnly = true)
 	public User getByEmail(String email) {
-		Query query = entityManager.createQuery("from User where email=?1");
+		Query query = entityManager.createQuery("SELECT u FROM User u WHERE u.email=?1");
 		query.setParameter(1, email);
 		
 		try {
@@ -51,6 +51,7 @@ public class UserDaoImpl implements UserDao {
 	@Transactional
 	public void store(User user) {
 		entityManager.persist(user);
+		entityManager.flush();
 	}
 	
 	@Transactional(readOnly = true)
