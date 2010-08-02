@@ -80,17 +80,7 @@ public class UserServiceImpl implements UserService {
 		byte[] bytes = new byte[16];
 		random.nextBytes(bytes);
 		
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < bytes.length; i++) {
-			String hex = Integer.toHexString(0xff & bytes[i]);
-			
-			if (hex.length() == 1)
-				buffer.append("0");
-			
-			buffer.append(hex);
-		}
-		
-		return buffer.toString();
+		return Utils.byteArrayToHexString(bytes);
 	}
 	
 	@Transactional

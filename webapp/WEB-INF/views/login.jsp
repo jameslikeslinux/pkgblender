@@ -26,7 +26,7 @@
 	</div>
 </c:if>
 
-<form action="/blender/checkCredentials" method="post">
+<form action="<c:url value="/checkCredentials" />" method="post">
 	<table>
 		<tr>
 			<td class="form-labels">

@@ -19,5 +19,7 @@
 		<dependency org="org.eclipse.persistence" name="eclipselink" rev="2.1.0" />
 		<dependency org="net.tanesha.recaptcha4j" name="recaptcha4j" rev="0.0.7" />
 		<dependency org="javax.mail" name="mail" rev="1.4.3" />
+		<dependency org="net.java.dev.jna" name="jna" rev="3.2.7" />
+		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.fileupload" rev="1.2.1" />
 	</dependencies>
 </ivy-module>

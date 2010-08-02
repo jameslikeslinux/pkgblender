@@ -41,6 +41,9 @@
 						<a href="#">Dashboard</a>
 						<a href="#">Packages</a>
 						<a href="#">Builds</a>
+						<sec:authorize access="hasRole('ROLE_USER')">
+							<a href="<c:url value="/upload" />">Upload</a>
+						</sec:authorize>
 					</span>
 					<span id="toolbar-right-links">
 						<sec:authorize access="not isAuthenticated()">

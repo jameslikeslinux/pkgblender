@@ -16,6 +16,17 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
+	<!-- Force repo add requests to provide body in inputstream -->
+	<filter>
+		<filter-name>RepoAddContentTypeFilter</filter-name>
+		<filter-class>com.thestaticvoid.blender.filter.RepoAddContentTypeFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>RepoAddContentTypeFilter</filter-name>
+		<url-pattern>/repo/*</url-pattern>
+	</filter-mapping>
 
 	<!-- Reads request input using UTF-8 encoding -->
 	<filter>

@@ -10,6 +10,7 @@
     <security:global-method-security pre-post-annotations="enabled" />
 
 	<security:http auto-config="false" entry-point-ref="loginUrlAuthenticationEntryPoint" use-expressions="true">
+		<security:intercept-url pattern="/upload" access="hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/resendEmailVerification" access="isAuthenticated()" />
 		<security:intercept-url pattern="/verifyEmail" access="isAuthenticated()" />
 		<security:intercept-url pattern="/**" filters="none" />
