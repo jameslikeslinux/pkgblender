@@ -35,7 +35,7 @@
 	<!-- Deploys an in-process database for testing -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://blender.thestaticvoid.com/blender" />
+		<property name="url" value="jdbc:mysql://localhost/blender" />
 		<property name="username" value="blender" />
 		<property name="password" value="" />
 	</bean>
