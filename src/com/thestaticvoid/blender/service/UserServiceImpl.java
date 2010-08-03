@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
 		// and the cached user (in the Spring SecurityContext)
 		emailValidationTokenDao.remove(user.getEmailValidationToken());
 		user.setEmailValidationToken(null);
-		Utils.getCachedUser().setEmailValidationToken(null);
+		Utils.setCachedUser(user);
 	}
 
 	@Transactional

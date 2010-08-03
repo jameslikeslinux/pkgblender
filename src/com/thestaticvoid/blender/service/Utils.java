@@ -9,12 +9,16 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.thestaticvoid.blender.domain.User;
 
 public class Utils {
-	public static final String FILE_DIR = "/blender";
+	public static final String TMP_DIR = "/blender/tmp";
+	public static final String FILE_DIR = "/blender/files";
+	public static final String SPECS_DIR = "/blender/specs";
 	
 	public static <T> Map<String, String> validate(Validator validator, T object) {
 		Map<String, String> errors = new HashMap<String, String>();
@@ -33,6 +37,13 @@ public class Utils {
 		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 	
+	public static void setCachedUser(User user) {
+		Authentication currentToken = SecurityContextHolder.getContext().getAuthentication();
+		UsernamePasswordAuthenticationToken newToken = new UsernamePasswordAuthenticationToken(user, currentToken.getCredentials(), user.getAuthorities());
+		newToken.setDetails(user);
+		SecurityContextHolder.getContext().setAuthentication(newToken);
+	}
+	
 	public static String byteArrayToHexString(byte[] bytes) {
 		StringBuffer buffer = new StringBuffer();
 		
@@ -49,7 +60,7 @@ public class Utils {
 	}
 	
 	public static File getTmpFile() {
-		File tmpDir = new File(FILE_DIR +  "/tmp");
+		File tmpDir = new File(TMP_DIR);
 		
 		if (!tmpDir.exists())
 			tmpDir.mkdirs();

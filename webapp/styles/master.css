@@ -157,3 +157,8 @@ td.status {
 .notification {
 	width: 33%;
 }
+
+.error {
+	font-family: monospace;
+	margin-left: 20px;	
+}
