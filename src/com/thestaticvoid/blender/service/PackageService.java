@@ -4,5 +4,5 @@ import java.io.File;
 import java.io.IOException;
 
 public interface PackageService {
-	public void createNewPackage(String packageName, File specFile) throws IOException, SpecFileException, AdditionalFileRequiredException, PackageExistsException ;
+	public void createNewPackage(String packageName, File specFile);
 }

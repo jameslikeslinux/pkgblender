@@ -1,4 +1,4 @@
-package spec;
+package com.thestaticvoid.blender.spec;
 
 public class InvalidFileNameException extends Exception {
 	private String invalidFileName, fileNameHelp;

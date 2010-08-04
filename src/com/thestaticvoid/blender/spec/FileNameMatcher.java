@@ -1,4 +1,4 @@
-package spec;
+package com.thestaticvoid.blender.spec;
 
 import java.io.File;
 import java.io.FilenameFilter;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PackageServiceImpl implements PackageService {
-	public void createNewPackage(String packageName, File file) throws IOException, SpecFileException, AdditionalFileRequiredException, PackageExistsException {
-		SpecFile specFile = new SpecFile(packageName, file);
+	public void createNewPackage(String packageName, File file) {
+		
 	}
 }

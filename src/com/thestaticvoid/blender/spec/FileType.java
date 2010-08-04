@@ -1,4 +1,4 @@
-package spec;
+package com.thestaticvoid.blender.spec;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,8 +17,23 @@ public enum FileType {
 	}),
 	
 	INCLUDE("/include/", new FileNameMatcher() {
+		private final String[] IGNORE_INCLUDES = new String[]{
+			"arch64.inc",
+			"base.inc",
+			"default-depend.inc",
+			"options.inc",
+			"prod.inc",
+			"Solaris.inc"
+		};
+		
 		public boolean matches(String packageName, String fileName) {
-			return fileName.matches(".*\\.inc");
+			boolean ignore = false;
+			for (String ignoreInclude : IGNORE_INCLUDES) {
+				if (fileName.equals(ignoreInclude))
+					ignore = true;
+			}
+			
+			return !ignore && fileName.matches(".*\\.inc");
 		}
 		
 		public String getMatchHelp(String packageName) {

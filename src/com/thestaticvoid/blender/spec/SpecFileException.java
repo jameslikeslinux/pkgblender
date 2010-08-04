@@ -1,4 +1,4 @@
-package com.thestaticvoid.blender.service;
+package com.thestaticvoid.blender.spec;
 
 public class SpecFileException extends Exception {
 	public SpecFileException(String message) {
