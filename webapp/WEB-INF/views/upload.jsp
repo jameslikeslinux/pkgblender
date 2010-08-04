@@ -27,13 +27,12 @@
 	<table>
 		<tr>
 			<td class="form-labels">
-				<label for="specfile">Spec File:</label>
+				<label for="specFile">Spec File:</label>
 			</td>
 			<td><input type="file" name="specFile" id="specFile" /></td>
 		</tr>
 		<tr>
 			<td colspan="2" id="form-submit" ><br />
-<!--				<input type="hidden" name="packageName" value="blah" />-->
 				<input type="submit" value="Upolad" />
 			</td>
 		</tr>
