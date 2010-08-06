@@ -8,10 +8,13 @@ import java.util.List;
 public enum FileType {
 	SPEC("/", new FileNameMatcher() {
 		public boolean matches(String packageName, String fileName) {
-			return fileName.matches(packageName + "\\.spec");
+			return fileName.equals(packageName + ".spec") && !fileName.endsWith("-base.spec");
 		}
 
 		public String getMatchHelp(String packageName) {
+			if (packageName.endsWith("-base"))
+				return packageName.substring(0, packageName.length() - "-base".length()) + ".spec";
+			
 			return packageName + ".spec";
 		}
 	}),
@@ -33,7 +36,7 @@ public enum FileType {
 					ignore = true;
 			}
 			
-			return !ignore && fileName.matches(".*\\.inc");
+			return !ignore && fileName.endsWith(".inc");
 		}
 		
 		public String getMatchHelp(String packageName) {
@@ -43,7 +46,7 @@ public enum FileType {
 	
 	BASESPEC("/base-specs/", new FileNameMatcher() {
 		public boolean matches(String packageName, String fileName) {
-			return fileName.matches(packageName + "-base\\.spec");
+			return fileName.equals(packageName + "-base.spec");
 		}
 		
 		public String getMatchHelp(String packageName) {
@@ -65,7 +68,7 @@ public enum FileType {
 	
 	COPYRIGHT("/copyright/", new FileNameMatcher() {
 		public boolean matches(String packageName, String fileName) {
-			return fileName.matches(packageName + "\\.copyright");
+			return fileName.equals(packageName + ".copyright");
 		}
 		
 		public String getMatchHelp(String packageName) {
@@ -94,18 +97,21 @@ public enum FileType {
 			return;
 		
 		if (!fileNameMatcher.matches(packageName, fileName))
-			throw new InvalidFileNameException(fileName, fileNameMatcher.getMatchHelp(packageName));
+			throw new InvalidFileNameException(this, fileName, fileNameMatcher.getMatchHelp(packageName));
 	}
 	
 	public List<File> getFiles(String packageName, String dir) {
 		List<File> files = new ArrayList<File>();
 		
-		if (fileNameMatcher == null)
-			Collections.addAll(files, new File(dir + baseDir).listFiles());
-		else {
-			fileNameMatcher.setPackageName(packageName);
-			Collections.addAll(files, new File(dir + baseDir).listFiles(fileNameMatcher));
-		}
+		File fileDir = new File(dir + baseDir);
+		
+		if (fileDir.exists())
+			if (fileNameMatcher == null)
+				Collections.addAll(files, fileDir.listFiles());
+			else {
+				fileNameMatcher.setPackageName(packageName);
+				Collections.addAll(files, fileDir.listFiles(fileNameMatcher));
+			}
 		
 		return files;
 	}

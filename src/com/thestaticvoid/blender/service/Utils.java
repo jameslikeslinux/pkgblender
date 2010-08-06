@@ -72,4 +72,22 @@ public class Utils {
 			return null;
 		}
 	}
+	
+	public static File getTmpFile(String fileName) {
+		File tmpDir = new File(TMP_DIR);
+		
+		if (!tmpDir.exists())
+			tmpDir.mkdirs();
+		
+		File tmpFile = new File(tmpDir + "/" + fileName);
+		
+		try {
+			tmpFile.createNewFile();
+		} catch (IOException e) {
+			// XXX meh
+			return null;
+		}
+		
+		return tmpFile;
+	}
 }

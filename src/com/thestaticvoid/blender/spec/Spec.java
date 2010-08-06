@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import com.thestaticvoid.blender.service.Utils;
 
 public class Spec {
@@ -64,7 +66,21 @@ public class Spec {
 	
 	public void addFile(File file, FileType fileType) throws InvalidFileNameException, IOException {
 		fileType.checkValidFileName(packageName, file.getName());
-		File destFile = new File(getSpecDir() + fileType.getBaseDir() + file.getName());
+		
+		File destDir = new File(getSpecDir() + fileType.getBaseDir());
+		if (!destDir.exists()) {
+			destDir.mkdir();
+			
+			try {
+				if (Runtime.getRuntime().exec("/usr/bin/svn add " + destDir).waitFor() != 0)
+					throw new Exception();
+			} catch (Exception e) {
+				destDir.delete();
+				throw new IOException("Could not add " + destDir + " to the repository.");
+			}
+		}
+		
+		File destFile = new File(destDir + "/" + file.getName());
 		file.renameTo(destFile);
 		
 		try {
@@ -78,8 +94,15 @@ public class Spec {
 		files.put(file, fileType);
 	}
 	
+	public String getPackageName() {
+		return packageName;
+	}
+	
 	public void check() throws IOException, InvalidFileNameException, AdditionalFilesRequiredException, SpecFileException {
 		checkForErrors();
+		checkPackageName();
+		String copyrightFile = checkForCopyright();
+		checkForFiles(copyrightFile);
 	}
 	
 	private void checkForErrors() throws IOException, InvalidFileNameException, AdditionalFilesRequiredException, SpecFileException {
@@ -99,7 +122,7 @@ public class Spec {
 			// check if we need an include
 			Matcher matcher = COULD_NOT_OPEN_INCLUDE.matcher(error);
 			if (matcher.matches()) {
-				String requiredInclude = matcher.group(1);
+				String requiredInclude = new File(matcher.group(1)).getName();
 				
 				// check if the requested include is a valid file name
 				FileType.INCLUDE.checkValidFileName(packageName, requiredInclude);
@@ -111,7 +134,7 @@ public class Spec {
 			// check if we need some other file
 			matcher = COULD_NOT_OPEN_FILE.matcher(error);
 			if (matcher.matches()) {
-				String requiredFile = matcher.group(1);
+				String requiredFile = new File(matcher.group(1)).getName();
 				
 				// check if the requested include is a valid file name
 				// XXX this assumes the missing file is a base-spec...what else is there?
@@ -123,6 +146,74 @@ public class Spec {
 			
 			// otherwise, unknown error can be sent to the user
 			throw new SpecFileException(error);
+		}
+	}
+	
+	private void checkPackageName() throws IOException, SpecFileException {
+		Process errorCheckProcess = Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc get_package_names " + getSpecFile());
+		BufferedReader reader = new BufferedReader(new InputStreamReader(errorCheckProcess.getInputStream()));
+		String result = reader.readLine();
+		
+		// XXX assumes the package name is the first package defined
+		if (!result.equals(packageName))
+			throw new SpecFileException("The spec file does not define the package " + packageName);
+	}
+	
+	private String checkForCopyright() throws IOException, SpecFileException, InvalidFileNameException {
+		String copyrightTag = "%sunw_copyright";
+		Process errorCheckProcess = Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc eval " + copyrightTag + " " + getSpecFile());
+		BufferedReader reader = new BufferedReader(new InputStreamReader(errorCheckProcess.getInputStream()));
+		String result = reader.readLine();
+		
+		if (result.equals(copyrightTag))
+			throw new SpecFileException("The spec file requires a 'SUNW_Copyright' tag.");
+		
+		FileType.COPYRIGHT.checkValidFileName(packageName, result);
+		
+		return result;
+	}
+	
+	private void checkForFiles(String copyrightFile) throws IOException, InvalidFileNameException, AdditionalFilesRequiredException {
+		AdditionalFilesRequiredException addlFiles = new AdditionalFilesRequiredException();
+		
+		if (!new File(getSpecDir() + FileType.COPYRIGHT.getBaseDir() + copyrightFile).exists())
+			addlFiles.addFile(copyrightFile, FileType.COPYRIGHT);
+		
+		checkExtSources(addlFiles);
+		checkPatches(addlFiles);
+		
+		if (!addlFiles.getFiles().isEmpty())
+			throw addlFiles;
+	}
+	
+	private void checkExtSources(AdditionalFilesRequiredException addlFiles) throws IOException {
+		Process errorCheckProcess = Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc get_sources " + getSpecFile());
+		BufferedReader reader = new BufferedReader(new InputStreamReader(errorCheckProcess.getInputStream()));
+		
+		String line;
+		while ((line = reader.readLine()) != null) {
+			if (line.startsWith("ftp://") || line.startsWith("http://"))
+				continue;
+			
+			if (!new File(getSpecDir() + FileType.EXTSOURCE.getBaseDir() + line).exists())
+				addlFiles.addFile(line, FileType.EXTSOURCE);
+		}
+	}
+	
+	private void checkPatches(AdditionalFilesRequiredException addlFiles) throws IOException, InvalidFileNameException {
+		Process errorCheckProcess = Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc get_patches " + getSpecFile());
+		BufferedReader reader = new BufferedReader(new InputStreamReader(errorCheckProcess.getInputStream()));
+		
+		String line;
+		while ((line = reader.readLine()) != null) {
+			if (line.startsWith("ftp://") || line.startsWith("http://"))
+				continue;
+			
+			// check that the patch file name is in the right format
+			FileType.PATCH.checkValidFileName(packageName, line);
+			
+			if (!new File(getSpecDir() + FileType.PATCH.getBaseDir() + line).exists())
+				addlFiles.addFile(line, FileType.PATCH);
 		}
 	}
 }

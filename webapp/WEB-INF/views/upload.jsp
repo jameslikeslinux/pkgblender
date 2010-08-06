@@ -12,31 +12,41 @@
 
 <h1>Create New Package</h1>
 
-<c:choose>
-    <c:when test="${!empty invalidFilename}">
-        <div id="form-errors">
-            <p><img src="/blender/images/invalid.png" /> The file you upload must end with ${invalidFilename}.</p>
-        </div>
-    </c:when>
-    <c:otherwise>
-        <p>To create a new package, choose a completed spec file to upload.</p>
-    </c:otherwise>
-</c:choose>
 
-<form action="<c:url value="/upload" />" method="post" enctype="multipart/form-data">
+<form:form modelAttribute="uploadForm" enctype="multipart/form-data">
+	<spring:hasBindErrors name="uploadForm">
+		<p><form:errors /></p>
+	</spring:hasBindErrors>
+
+	<form:hidden path="numFiles" />
+	<form:hidden path="packageName" />
+	
 	<table>
-		<tr>
-			<td class="form-labels">
-				<label for="specFile">Spec File:</label>
-			</td>
-			<td><input type="file" name="specFile" id="specFile" /></td>
-		</tr>
+		<c:forEach var="i" begin="0" end="${uploadForm.numFiles - 1}" step="1">
+			<tr>
+				<td class="form-labels">
+					<label for="files[${i}]">${uploadForm.fileNames[i]}:</label>
+					<form:hidden path="fileNames[${i}]" />
+					<form:hidden path="fileTypes[${i}]" />
+				</td>
+				<td><input type="file" name="files[${i}]" id="files[${i}]" /></td>
+				<td class="status">
+					<spring:bind path="uploadForm.files[${i}]">
+						<c:if test="${status.error}">
+							<img src="<c:url value="/images/invalid.png" />" />
+							<form:errors path="files[${i}]" />
+						</c:if>
+					</spring:bind>
+				</td>
+			</tr>
+		</c:forEach>
+		
 		<tr>
 			<td colspan="2" id="form-submit" ><br />
-				<input type="submit" value="Upolad" />
+				<input type="submit" value="Upload" />
 			</td>
 		</tr>
 	</table>
-</form>
+</form:form>
 
 <c:import url="footer.jsp" />

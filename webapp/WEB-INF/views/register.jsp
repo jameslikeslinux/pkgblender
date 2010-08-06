@@ -12,8 +12,8 @@
 </c:import>
 
 <spring:hasBindErrors name="registrationForm">
-	<c:set var="imgInvalid"><img src="/blender/images/invalid.png" /></c:set>
-	<c:set var="okImg"><img src="/blender/images/ok.png" /></c:set>
+	<c:set var="imgInvalid"><img src="<c:url value="/images/invalid.png" />" /></c:set>
+	<c:set var="okImg"><img src="<c:url value="/images/ok.png" />" /></c:set>
 </spring:hasBindErrors>
 
 <h1>Create Account</h1>
