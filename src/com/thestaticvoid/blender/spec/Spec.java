@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-
 import com.thestaticvoid.blender.service.Utils;
 
 public class Spec {
@@ -106,13 +104,13 @@ public class Spec {
 	}
 	
 	private void checkForErrors() throws IOException, InvalidFileNameException, AdditionalFilesRequiredException, SpecFileException {
-		Process errorCheckProcess = Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc get_error " + getSpecFile());
-		BufferedReader reader = new BufferedReader(new InputStreamReader(errorCheckProcess.getInputStream()));
+		Process specTool = runSpecTool("get_error");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(specTool.getInputStream()));
 		String error = reader.readLine();
 		
 		int exitStatus;
 		try {
-			exitStatus = errorCheckProcess.waitFor();
+			exitStatus = specTool.waitFor();
 		} catch (InterruptedException e) {
 			exitStatus = 1;
 		}
@@ -150,8 +148,8 @@ public class Spec {
 	}
 	
 	private void checkPackageName() throws IOException, SpecFileException {
-		Process errorCheckProcess = Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc get_package_names " + getSpecFile());
-		BufferedReader reader = new BufferedReader(new InputStreamReader(errorCheckProcess.getInputStream()));
+		Process specTool = runSpecTool("get_package_names");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(specTool.getInputStream()));
 		String result = reader.readLine();
 		
 		// XXX assumes the package name is the first package defined
@@ -161,8 +159,8 @@ public class Spec {
 	
 	private String checkForCopyright() throws IOException, SpecFileException, InvalidFileNameException {
 		String copyrightTag = "%sunw_copyright";
-		Process errorCheckProcess = Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc eval " + copyrightTag + " " + getSpecFile());
-		BufferedReader reader = new BufferedReader(new InputStreamReader(errorCheckProcess.getInputStream()));
+		Process specTool = runSpecTool("eval " + copyrightTag);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(specTool.getInputStream()));
 		String result = reader.readLine();
 		
 		if (result.equals(copyrightTag))
@@ -179,30 +177,16 @@ public class Spec {
 		if (!new File(getSpecDir() + FileType.COPYRIGHT.getBaseDir() + copyrightFile).exists())
 			addlFiles.addFile(copyrightFile, FileType.COPYRIGHT);
 		
-		checkExtSources(addlFiles);
-		checkPatches(addlFiles);
+		checkAddlFiles("sources", FileType.EXTSOURCE, addlFiles);
+		checkAddlFiles("patches", FileType.PATCH, addlFiles);
 		
 		if (!addlFiles.getFiles().isEmpty())
 			throw addlFiles;
 	}
 	
-	private void checkExtSources(AdditionalFilesRequiredException addlFiles) throws IOException {
-		Process errorCheckProcess = Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc get_sources " + getSpecFile());
-		BufferedReader reader = new BufferedReader(new InputStreamReader(errorCheckProcess.getInputStream()));
-		
-		String line;
-		while ((line = reader.readLine()) != null) {
-			if (line.startsWith("ftp://") || line.startsWith("http://"))
-				continue;
-			
-			if (!new File(getSpecDir() + FileType.EXTSOURCE.getBaseDir() + line).exists())
-				addlFiles.addFile(line, FileType.EXTSOURCE);
-		}
-	}
-	
-	private void checkPatches(AdditionalFilesRequiredException addlFiles) throws IOException, InvalidFileNameException {
-		Process errorCheckProcess = Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc get_patches " + getSpecFile());
-		BufferedReader reader = new BufferedReader(new InputStreamReader(errorCheckProcess.getInputStream()));
+	private void checkAddlFiles(String type, FileType fileType, AdditionalFilesRequiredException addlFiles) throws IOException, InvalidFileNameException {
+		Process specTool = runSpecTool("get_" + type);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(specTool.getInputStream()));
 		
 		String line;
 		while ((line = reader.readLine()) != null) {
@@ -210,10 +194,14 @@ public class Spec {
 				continue;
 			
 			// check that the patch file name is in the right format
-			FileType.PATCH.checkValidFileName(packageName, line);
+			fileType.checkValidFileName(packageName, line);
 			
-			if (!new File(getSpecDir() + FileType.PATCH.getBaseDir() + line).exists())
-				addlFiles.addFile(line, FileType.PATCH);
+			if (!new File(getSpecDir() + fileType.getBaseDir() + line).exists())
+				addlFiles.addFile(line, fileType);
 		}
+	}
+	
+	private Process runSpecTool(String subCommand) throws IOException {
+		return Runtime.getRuntime().exec("/usr/bin/spectool --rcfile=" + getSpecDir() + "/.pkgtoolrc " + subCommand + " " + getSpecFile());
 	}
 }
