@@ -160,5 +160,9 @@ td.status {
 
 .error {
 	font-family: monospace;
-	margin-left: 20px;	
+}
+
+.error img {
+	vertical-align: middle;
+	padding-right: 5px;
 }

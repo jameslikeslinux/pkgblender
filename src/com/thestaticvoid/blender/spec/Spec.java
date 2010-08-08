@@ -96,6 +96,22 @@ public class Spec {
 		return packageName;
 	}
 	
+	public void commit() {
+		commit("Initial upload.");
+	}
+	
+	public void commit(String message) {
+		try {
+			Runtime.getRuntime().exec(new String[]{"/usr/bin/svn", "commit", "-m", message, getSpecDir()}).waitFor();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void check() throws IOException, InvalidFileNameException, AdditionalFilesRequiredException, SpecFileException {
 		checkForErrors();
 		checkPackageName();

@@ -1,6 +1,5 @@
 package com.thestaticvoid.blender.domain;
 
-
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -9,7 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -24,7 +26,15 @@ public class Package {
 	private String name;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="pkg")
-	private Set<Version> versions;
+	private Set<Build> builds;
+	
+	@ManyToOne
+	@JoinColumn(name = "maintainer_id", nullable = false)
+	private User maintainer;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "validation_id")
+	private Validation validation;
 
 	public int getId() {
 		return id;
@@ -36,5 +46,21 @@ public class Package {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public User getMaintainer() {
+		return maintainer;
+	}
+
+	public void setMaintainer(User maintainer) {
+		this.maintainer = maintainer;
+	}
+
+	public Validation getValidation() {
+		return validation;
+	}
+
+	public void setValidation(Validation validation) {
+		this.validation = validation;
 	}
 }

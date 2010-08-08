@@ -59,7 +59,7 @@ public class User implements UserDetails {
 	private Set<Role> roles;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "creation_date", updatable = false)
+	@Column(name = "creation_date", nullable = false, updatable = false)
 	private Date creationDate = new Date();
 	
 	@Temporal(TemporalType.TIMESTAMP)

@@ -21,11 +21,17 @@ public class Build {
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "version_id", nullable = false)
-	private Version version;
+	@JoinColumn(name = "package_id", nullable = false)
+	private Package pkg;
+	
+	@Column(name = "version")
+	private String version;
 	
 	@Column(name = "build_num")
 	private int buildNum;
+	
+	@Column(name = "svn_rev")
+	private int svnRevision;
 	
 	@ManyToMany(mappedBy = "builds")
 	private Set<Repository> repositories;

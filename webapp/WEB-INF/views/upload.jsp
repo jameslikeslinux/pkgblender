@@ -12,11 +12,33 @@
 
 <h1>Create New Package</h1>
 
-
 <form:form modelAttribute="uploadForm" enctype="multipart/form-data">
 	<spring:hasBindErrors name="uploadForm">
-		<p><form:errors /></p>
+		<c:set var="hasBindErrors" value="true" />
+	
+		<c:choose>
+			<c:when test="${not empty errors.globalErrors}">
+				<p>There was a problem processing the spec file that you uploaded.  Please correct the following error and try again.</p>
+				<p class="error"><img src="<c:url value="/images/invalid.png" />" /> <form:errors /></p>
+			</c:when>
+			
+			<c:otherwise>
+				<p>Please correct the errors below and upload again.</p>
+			</c:otherwise>
+		</c:choose>
 	</spring:hasBindErrors>
+	
+	<c:if test="${not hasBindErrors}">
+		<c:choose>
+			<c:when test="${empty uploadForm.packageName}">
+				<p>To create a new package, upload a completed spec file.  pkgblender will prompt you for any additional files required by your spec file.</p>
+			</c:when>
+			
+			<c:otherwise>
+				<p>The spec file that you uploaded requires the following additional files:</p>
+			</c:otherwise>
+		</c:choose>
+	</c:if>
 
 	<form:hidden path="numFiles" />
 	<form:hidden path="packageName" />
