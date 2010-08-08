@@ -19,7 +19,7 @@
 		<c:choose>
 			<c:when test="${not empty errors.globalErrors}">
 				<p>There was a problem processing the spec file that you uploaded.  Please correct the following error and try again.</p>
-				<p class="error"><img src="<c:url value="/images/invalid.png" />" /> <form:errors /></p>
+				<p class="spec-error"><img src="<c:url value="/images/invalid.png" />" /> <form:errors /></p>
 			</c:when>
 			
 			<c:otherwise>

@@ -14,18 +14,6 @@ public class UserDaoImpl implements UserDao {
 	private EntityManager entityManager;
 	
 	@Transactional(readOnly = true)
-	public User getByUsername(String username) {
-		Query query = entityManager.createQuery("SELECT u FROM User u WHERE u.username=?1");
-		query.setParameter(1, username);
-		
-		try {
-			return (User) query.getSingleResult();
-		} catch (NoResultException nre) {
-			return null;
-		}
-	}
-	
-	@Transactional(readOnly = true)
 	public User getByEmail(String email) {
 		Query query = entityManager.createQuery("SELECT u FROM User u WHERE u.email=?1");
 		query.setParameter(1, email);
@@ -41,21 +29,5 @@ public class UserDaoImpl implements UserDao {
 		}
 		
 		return null;
-	}
-	
-	@Transactional(readOnly = true)
-	public User get(int id) {
-		return entityManager.find(User.class, id);
-	}
-	
-	@Transactional
-	public void store(User user) {
-		entityManager.persist(user);
-		entityManager.flush();
-	}
-	
-	@Transactional(readOnly = true)
-	public void refresh(User user) {
-		entityManager.refresh(user);
 	}
 }

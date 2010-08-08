@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.thestaticvoid.blender.domain.EmailValidationToken;
-import com.thestaticvoid.blender.domain.EmailValidationTokenDao;
+import com.thestaticvoid.blender.domain.GenericDao;
 import com.thestaticvoid.blender.domain.Role;
 import com.thestaticvoid.blender.domain.User;
 import com.thestaticvoid.blender.domain.UserDao;
@@ -29,7 +29,7 @@ import com.thestaticvoid.blender.domain.UserDao;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 	private UserDao userDao;
-	private EmailValidationTokenDao emailValidationTokenDao;
+	private GenericDao genericDao;
 	private Validator validator;
 	private PasswordEncoder passwordEncoder;
 	private SaltSource saltSource;
@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Autowired
-	public void setEmailValidationTokenDao(EmailValidationTokenDao emailValidationTokenDao) {
-		this.emailValidationTokenDao = emailValidationTokenDao;
+	public void setGenericDao(GenericDao genericDao) {
+		this.genericDao = genericDao;
 	}
 
 	@Autowired
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional(readOnly = true)
 	public boolean userExists(String username) {
-		return userDao.getByUsername(username) != null;
+		return genericDao.getByColumn(User.class, "username", username) != null;
 	}
 	
 	@Transactional(readOnly = true)
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
 			emailValidationToken = new EmailValidationToken();
 			emailValidationToken.setToken(token);
 			emailValidationToken.setUser(user);
-			emailValidationTokenDao.store(emailValidationToken);
+			genericDao.store(emailValidationToken);
 		} else
 			emailValidationToken.setToken(token);
 		
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
 			errors.put("email", "email.already.registered");
 		
 		if (errors.size() > 0)
-			throw new RegistrationException(errors);
+			throw new ValidationException(errors);
 		
 		if (validateOnly)
 			return;
@@ -137,13 +137,13 @@ public class UserServiceImpl implements UserService {
 		newUser.setPassword(passwordHash);
 		
 		// store the new user in the database
-		userDao.store(newUser);
+		genericDao.store(newUser);
 		
 		// send the user an email to verify their address
 		sendEmailVerification(newUser);
 		
 		// update the newUser object with the newly created email address token
-		userDao.refresh(newUser);
+		genericDao.refresh(newUser);
 		
 		// login the user (caches the newUser object in the Spring SecurityContext)
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(newUser, details.getPassword(), newUser.getAuthorities());
@@ -154,13 +154,13 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional
 	public void resendEmailVerification() {
-		User user = userDao.get(Utils.getCachedUser().getId());
+		User user = genericDao.get(User.class, Utils.getCachedUser().getId());
 		sendEmailVerification(user);
 	}
 	
 	@Transactional(noRollbackFor = EmailVerificationException.class)
 	public void verifyEmail(String token) {
-		User user = userDao.get(Utils.getCachedUser().getId());
+		User user = genericDao.get(User.class, Utils.getCachedUser().getId());
 		
 		if (user.isEmailValid())
 			throw new EmailVerificationException("email.already.verified");
@@ -175,15 +175,15 @@ public class UserServiceImpl implements UserService {
 		
 		// the validation was successful so remove the token from the database
 		// and the cached user (in the Spring SecurityContext)
-		emailValidationTokenDao.remove(user.getEmailValidationToken());
+		genericDao.remove(user.getEmailValidationToken());
 		user.setEmailValidationToken(null);
 		Utils.setCachedUser(user);
 	}
 
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-		User user = userDao.getByUsername(username);
-
+		User user = genericDao.getByColumn(User.class, "username", username);
+		
 		if (user == null)
 			throw new UsernameNotFoundException("Not found.", username);
 		

@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.thestaticvoid.blender.domain.GenericDao;
 import com.thestaticvoid.blender.domain.Repository;
-import com.thestaticvoid.blender.domain.RepositoryDao;
 
 @Service
 public class RepoServiceImpl implements RepoService {
 	@Autowired
-	private RepositoryDao repositoryDao;
+	private GenericDao genericDao;
 	
 	private static final Pattern FMRI_PATTERN = Pattern.compile("^(pkg:/)?(.*)@(.*):?(.*)?$");
 	
@@ -24,7 +24,7 @@ public class RepoServiceImpl implements RepoService {
 	
 	@Transactional
 	public int openTransaction(String repo, String fmri) {
-		Repository repository = repositoryDao.getByName(repo);
+		Repository repository = genericDao.getByColumn(Repository.class, "name", repo);
 		Matcher fmriMatcher = FMRI_PATTERN.matcher(fmri);
 		String name = fmriMatcher.group(2);
 		String version = fmriMatcher.group(3);

@@ -9,6 +9,10 @@ h1 {
 	font-size: 24px;
 }
 
+h2 {
+	margin: 0 0 10px 0;
+}
+
 a img {
 	border: none;
 }
@@ -158,11 +162,25 @@ td.status {
 	width: 33%;
 }
 
-.error {
+.spec-error {
 	font-family: monospace;
 }
 
-.error img {
+.spec-error img {
 	vertical-align: middle;
 	padding-right: 5px;
+}
+
+#admin td {
+	vertical-align: top;	
+}
+
+#admin-nav {
+	text-align: right;
+	padding-right: 10px;
+	border-right:  1px solid #191919;
+}
+
+#admin-content {
+	padding-left: 10px;
 }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.thestaticvoid.blender.service.EmailVerificationException;
-import com.thestaticvoid.blender.service.RegistrationException;
+import com.thestaticvoid.blender.service.ValidationException;
 import com.thestaticvoid.blender.service.UserService;
 
 @Controller
@@ -79,8 +79,8 @@ public class RegistrationController {
 		// otherwise just check for any further form errors
 		try {
 			userService.registerUser(registrationForm, result.hasErrors());
-		} catch (RegistrationException re) {
-			Map<String, String> errors = re.getErrors();
+		} catch (ValidationException ve) {
+			Map<String, String> errors = ve.getErrors();
 			for (String path : errors.keySet())
 				result.rejectValue(path, errors.get(path));
 		}

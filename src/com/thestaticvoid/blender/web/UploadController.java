@@ -33,7 +33,7 @@ public class UploadController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String upload(UploadForm uploadForm, BindingResult result, Model model) throws IOException {
+	public String upload(UploadForm uploadForm, BindingResult result) throws IOException {
 		MultipartFile[] multipartFiles = uploadForm.getFiles();
 		Spec spec;
 		
