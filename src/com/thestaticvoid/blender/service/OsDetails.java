@@ -3,16 +3,18 @@ package com.thestaticvoid.blender.service;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.URL;
 
 public class OsDetails {
 	@NotEmpty
 	private String name;
 	
 	@NotEmpty
-	@Pattern(regexp = "^\\w+$", message = "invalid.slug")
+	@Pattern(regexp = "^\\w*$", message = "invalid.slug")
 	private String slug;
 	
 	@NotEmpty
+	@URL(message = "invalid.url")
 	private String publisher;
 	
 	@NotEmpty

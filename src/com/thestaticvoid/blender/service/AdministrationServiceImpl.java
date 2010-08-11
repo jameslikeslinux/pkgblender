@@ -1,15 +1,26 @@
 package com.thestaticvoid.blender.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.validation.Validator;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.thestaticvoid.blender.domain.GenericDao;
+import com.thestaticvoid.blender.domain.LegacyPackage;
 import com.thestaticvoid.blender.domain.Os;
+import com.thestaticvoid.blender.domain.OsPackage;
 
 @Service
 public class AdministrationServiceImpl implements AdministrationService {
@@ -48,6 +59,55 @@ public class AdministrationServiceImpl implements AdministrationService {
 		
 		if (errors.size() > 0)
 			throw new ValidationException(errors);
+		
+		Os os = new Os();
+		BeanUtils.copyProperties(osDetails, os);
+		
+		try {
+			BufferedReader catalogReader = new BufferedReader(new InputStreamReader(new URL(os.getPublisher() + "/catalog/0/").openStream()));
+			
+			String line;
+			Pattern pkgPattern = Pattern.compile("^V (pkg:/((.*)@.*-(" + Pattern.quote(os.getBranch()) + "):.*))$");
+			Pattern legacyPattern = Pattern.compile("^legacy.*pkg=(\\S*).*$");
+			
+			while ((line = catalogReader.readLine()) != null) {
+				Matcher pkgMatch = pkgPattern.matcher(line);
+				if (pkgMatch.matches()) {
+					OsPackage osPackage = new OsPackage();
+					osPackage.setName(pkgMatch.group(3));
+					osPackage.setFmri(pkgMatch.group(1));
+					osPackage.setOs(os);
+					os.addPackage(osPackage);
+					
+					URI manifestUri = new URI(os.getPublisher() + "/manifest/0/" + pkgMatch.group(2));
+					BufferedReader manifestReader = new BufferedReader(new InputStreamReader(manifestUri.toURL().openStream()));
+					
+					while ((line = manifestReader.readLine()) != null) {
+						Matcher legacyMatch = legacyPattern.matcher(line);
+						if (legacyMatch.matches()) {
+							String pkgName = legacyMatch.group(1);
+							if (!osPackage.containsLegacyPackage(pkgName)) {
+								LegacyPackage legacyPackage = new LegacyPackage();
+								legacyPackage.setName(pkgName);
+								legacyPackage.setOsPackage(osPackage);
+								osPackage.addLegacyPackage(legacyPackage);
+							}
+						}
+					}
+					
+					manifestReader.close();
+				}
+			}
+			
+			catalogReader.close();
+		} catch (IOException e) {
+			errors.put("publisher", "os.invalid.publisher");
+			throw new ValidationException(errors);
+		} catch (URISyntaxException e) {
+			errors.put("publisher", "os.invalid.publisher");
+			throw new ValidationException(errors);
+		}
+		
+		genericDao.store(os);
 	}
-
 }
