@@ -10,15 +10,16 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
     
+    <!-- Enable load time weaving for AspectJ and EclipseLink -->
+    <context:load-time-weaver />
+    
 	<!-- Instructs Spring to perfrom declarative transaction management on annotated classes -->
-	<tx:annotation-driven />
+	<tx:annotation-driven mode="aspectj" />
 
 	<!-- Drives transactions using local JPA APIs -->
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-	
-	<context:load-time-weaver/>
 		
 	<!-- Creates a EntityManagerFactory for use with the Hibernate JPA provider and a simple in-memory data source populated with test data -->
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +17,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "oses")
 public class Os {
+	public enum Status {
+		ADDING, REFRESHING, FAILED, OK
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -32,9 +38,17 @@ public class Os {
 	@Column(name = "branch", nullable = false)
 	private String branch;
 	
+	@Column(name = "status", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Status status;
+	
 	@OneToMany(mappedBy = "os", cascade = CascadeType.ALL)
 	private List<OsPackage> packages = new ArrayList<OsPackage>();
 
+	public int getId() {
+		return id;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -65,6 +79,14 @@ public class Os {
 
 	public void setBranch(String branch) {
 		this.branch = branch;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public List<OsPackage> getPackages() {

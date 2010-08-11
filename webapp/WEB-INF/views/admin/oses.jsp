@@ -12,6 +12,12 @@
 
 <h2>Operating Systems</h2>
 
+<ul>
+	<c:forEach var="os" items="${oses}">
+		<li>${os.name} ${os.status}</li>
+	</c:forEach>
+</ul>
+
 <h3>Add New</h3>
 
 <form:form modelAttribute="newOsForm">

@@ -26,12 +26,13 @@ public class AdministrationController {
 	
 	@RequestMapping(value = "/admin/oses", method = RequestMethod.GET)
 	public String adminOses(Model model) {
+		model.addAttribute("oses", administrationService.getOses());
 		model.addAttribute("newOsForm", new OsDetails());
 		return "admin/oses";
 	}
 	
 	@RequestMapping(value = "/admin/oses", method = RequestMethod.POST)
-	public String adminOses(@ModelAttribute("newOsForm") OsDetails newOsForm, BindingResult result) {
+	public String adminOses(@ModelAttribute("newOsForm") OsDetails newOsForm, BindingResult result, Model model) {
 		try {
 			administrationService.createOs(newOsForm);
 		} catch (ValidationException ve) {
@@ -40,8 +41,10 @@ public class AdministrationController {
 				result.rejectValue(path, errors.get(path));
 		}
 		
-		if (result.hasErrors())
+		if (result.hasErrors()) {
+			model.addAttribute("oses", administrationService.getOses());
 			return "admin/oses";
+		}
 		
 		return "redirect:/admin/oses";
 	}
