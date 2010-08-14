@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.thestaticvoid.blender.service.EmailVerificationException;
-import com.thestaticvoid.blender.service.ValidationException;
 import com.thestaticvoid.blender.service.UserService;
+import com.thestaticvoid.blender.service.ValidationException;
 
 @Controller
 public class RegistrationController {

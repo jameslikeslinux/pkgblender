@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.thestaticvoid.blender.service.OsDetails;
 import com.thestaticvoid.blender.service.AdministrationService;
+import com.thestaticvoid.blender.service.OsDetails;
 import com.thestaticvoid.blender.service.ValidationException;
 
 @Controller

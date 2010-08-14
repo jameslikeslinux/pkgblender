@@ -12,7 +12,6 @@
 			<exclude module="com.springsource.javax.persistence" />
 		</dependency>
 		<dependency org="org.springframework" name="org.springframework.orm" rev="3.0.3.RELEASE" conf="*->runtime" />
-		<dependency org="net.sourceforge.cglib" name="com.springsource.net.sf.cglib" rev="2.2.0" />
 		<dependency org="javax.servlet" name="com.springsource.javax.servlet.jsp.jstl" rev="1.2.0" />
 		<dependency org="org.codehaus.jackson" name="com.springsource.org.codehaus.jackson.mapper" rev="1.4.2" />
 		<dependency org="com.mysql.jdbc" name="com.springsource.com.mysql.jdbc" rev="5.1.6" />
