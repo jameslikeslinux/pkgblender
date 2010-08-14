@@ -20,6 +20,7 @@
 	</bean>
 	
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="localhost" />
+		<property name="host" value="mail.thestaticvoid.com" />
+		<property name="port" value="587" />
 	</bean>
 </beans>
