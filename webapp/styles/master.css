@@ -171,11 +171,8 @@ td.status {
 	padding-right: 5px;
 }
 
-#admin td {
-	vertical-align: top;	
-}
-
 #admin-nav {
+	vertical-align: top;
 	text-align: right;
 	padding-right: 10px;
 	border-right:  1px solid #191919;

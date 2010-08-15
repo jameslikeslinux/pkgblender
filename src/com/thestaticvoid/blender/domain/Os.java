@@ -1,6 +1,7 @@
 package com.thestaticvoid.blender.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "oses")
@@ -41,6 +44,10 @@ public class Os {
 	@Column(name = "status", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Status status;
+	
+	@Column(name = "last_updated")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdated;
 	
 	@OneToMany(mappedBy = "os", cascade = CascadeType.ALL)
 	private List<OsPackage> packages = new ArrayList<OsPackage>();
@@ -87,6 +94,14 @@ public class Os {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 
 	public List<OsPackage> getPackages() {

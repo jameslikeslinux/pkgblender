@@ -30,6 +30,18 @@
 				</spring:bind>			
 			</td>
 		</tr>
+				
+		<tr>
+			<td class="form-labels">
+				<label for="os">OS:</label>
+			</td>
+			<td>
+				<form:select path="os">
+					<form:options items="${newBuildHostForm.oses}" />
+				</form:select>
+			</td>
+			<td class="status"></td>
+		</tr>
 
 		<tr>
 			<td class="form-labels">

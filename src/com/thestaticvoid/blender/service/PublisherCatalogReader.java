@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +28,7 @@ public class PublisherCatalogReader extends Thread {
 	@Transactional
 	public void run() {
 		os = genericDao.get(Os.class, os.getId());
+		Date updateStartedAt = new Date();
 		
 		try {
 			BufferedReader catalogReader = new BufferedReader(new InputStreamReader(new URL(os.getPublisher() + "/catalog/0/").openStream()));
@@ -72,6 +74,7 @@ public class PublisherCatalogReader extends Thread {
 			os.setStatus(Os.Status.FAILED);
 		}
 		
+		os.setLastUpdated(updateStartedAt);
 		os.setStatus(Os.Status.OK);
 		Logger.getLogger(getClass()).info("Completed adding packages from publisher.");
 	}

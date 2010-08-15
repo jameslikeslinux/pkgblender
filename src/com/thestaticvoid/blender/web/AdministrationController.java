@@ -51,7 +51,9 @@ public class AdministrationController {
 	
 	@RequestMapping(value = "/admin/buildHosts", method = RequestMethod.GET)
 	public String adminBuildHosts(Model model) {
-		model.addAttribute("newBuildHostForm", new BuildHostForm());
+		BuildHostForm newBuildHostForm = new BuildHostForm();
+		newBuildHostForm.setOses(administrationService.getOses());
+		model.addAttribute("newBuildHostForm", newBuildHostForm);
 		return "admin/buildHosts";
 	}
 }

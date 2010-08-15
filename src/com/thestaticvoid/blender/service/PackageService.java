@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.thestaticvoid.blender.domain.Branch;
 import com.thestaticvoid.blender.domain.GenericDao;
 import com.thestaticvoid.blender.domain.Package;
 import com.thestaticvoid.blender.spec.Spec;
@@ -22,6 +23,13 @@ public class PackageService {
 		Package pkg = new Package();
 		pkg.setName(spec.getPackageName());
 		pkg.setMaintainer(Utils.getCachedUser());
+		
+		Branch branch = new Branch();
+		branch.setName("trunk");
+		branch.setDependencies(spec.getDependencies());
+		branch.setPkg(pkg);
+		pkg.addBranch(branch);
+		
 		genericDao.store(pkg);
 	}
 }

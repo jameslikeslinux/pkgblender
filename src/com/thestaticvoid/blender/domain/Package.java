@@ -1,5 +1,6 @@
 package com.thestaticvoid.blender.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -25,8 +26,8 @@ public class Package {
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="pkg")
-	private Set<Build> builds;
+	@OneToMany(mappedBy="pkg", cascade = CascadeType.ALL)
+	private Set<Branch> branches = new HashSet<Branch>();
 	
 	@ManyToOne
 	@JoinColumn(name = "maintainer_id", nullable = false)
@@ -62,5 +63,9 @@ public class Package {
 
 	public void setValidation(Validation validation) {
 		this.validation = validation;
+	}
+	
+	public void addBranch(Branch branch) {
+		branches.add(branch);
 	}
 }

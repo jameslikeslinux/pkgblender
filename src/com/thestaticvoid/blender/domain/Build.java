@@ -21,8 +21,8 @@ public class Build {
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "package_id", nullable = false)
-	private Package pkg;
+	@JoinColumn(name = "branch_id", nullable = false)
+	private Branch branch;
 	
 	@Column(name = "version")
 	private String version;

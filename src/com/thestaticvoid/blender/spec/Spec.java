@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,8 +94,32 @@ public class Spec {
 		files.put(file, fileType);
 	}
 	
+	public Map<File, FileType> getFiles() {
+		return files;
+	}
+	
 	public String getPackageName() {
 		return packageName;
+	}
+	
+	public Set<String> getDependencies() {
+		Set<String> dependencies = new HashSet<String>();
+		
+		try {
+			Process specTool = runSpecTool("get_buildrequires");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(specTool.getInputStream()));
+			
+			String line;
+			while ((line = reader.readLine()) != null)
+				dependencies.add(line);
+			
+			reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dependencies;
 	}
 	
 	public void commit() {

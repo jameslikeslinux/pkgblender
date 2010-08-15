@@ -14,7 +14,7 @@
 
 <ul>
 	<c:forEach var="os" items="${oses}">
-		<li>${os.name} ${os.status}</li>
+		<li>${os.name}: ${os.status}</li>
 	</c:forEach>
 </ul>
 
