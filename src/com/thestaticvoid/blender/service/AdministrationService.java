@@ -10,23 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.thestaticvoid.blender.domain.AdministrationDao;
 import com.thestaticvoid.blender.domain.GenericDao;
 import com.thestaticvoid.blender.domain.Os;
 
 @Service
 public class AdministrationService {
+	@Autowired
 	private Validator validator;
+	
+	@Autowired
 	private GenericDao genericDao;
 	
 	@Autowired
-	public void setValidator(Validator validator) {
-		this.validator = validator;
-	}
-	
-	@Autowired
-	public void setGenericDao(GenericDao genericDao) {
-		this.genericDao = genericDao;
-	}
+	private AdministrationDao administrationDao;
 	
 	@Transactional(readOnly = true)
 	private boolean osNameExists(String name) {
@@ -59,7 +56,12 @@ public class AdministrationService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<Os> getOses() {
+	public List<Os> getAllOses() {
 		return genericDao.getAll(Os.class);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Os> getOkOses() {
+		return administrationDao.getOkOses();
 	}
 }

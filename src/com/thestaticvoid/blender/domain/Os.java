@@ -115,4 +115,8 @@ public class Os {
 	public void addPackage(OsPackage pkg) {
 		packages.add(pkg);
 	}
+	
+	public boolean equals(Os os) {
+		return id == os.id;
+	}
 }

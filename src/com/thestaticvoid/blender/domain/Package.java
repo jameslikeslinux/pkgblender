@@ -64,6 +64,10 @@ public class Package {
 	public void setValidation(Validation validation) {
 		this.validation = validation;
 	}
+		
+	public Set<Branch> getBranches() {
+		return branches;
+	}
 	
 	public void addBranch(Branch branch) {
 		branches.add(branch);

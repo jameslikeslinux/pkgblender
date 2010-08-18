@@ -26,7 +26,7 @@ public class AdministrationController {
 	
 	@RequestMapping(value = "/admin/oses", method = RequestMethod.GET)
 	public String adminOses(Model model) {
-		model.addAttribute("oses", administrationService.getOses());
+		model.addAttribute("oses", administrationService.getAllOses());
 		model.addAttribute("newOsForm", new OsDetails());
 		return "admin/oses";
 	}
@@ -42,7 +42,7 @@ public class AdministrationController {
 		}
 		
 		if (result.hasErrors()) {
-			model.addAttribute("oses", administrationService.getOses());
+			model.addAttribute("oses", administrationService.getAllOses());
 			return "admin/oses";
 		}
 		
@@ -52,7 +52,7 @@ public class AdministrationController {
 	@RequestMapping(value = "/admin/buildHosts", method = RequestMethod.GET)
 	public String adminBuildHosts(Model model) {
 		BuildHostForm newBuildHostForm = new BuildHostForm();
-		newBuildHostForm.setOses(administrationService.getOses());
+		newBuildHostForm.setOses(administrationService.getOkOses());
 		model.addAttribute("newBuildHostForm", newBuildHostForm);
 		return "admin/buildHosts";
 	}

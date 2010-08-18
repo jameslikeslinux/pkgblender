@@ -34,7 +34,12 @@ public class Utils {
 	}
 	
 	public static User getCachedUser() {
-		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if (user instanceof User)
+			return (User) user;
+		
+		return null;
 	}
 	
 	public static void setCachedUser(User user) {

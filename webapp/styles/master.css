@@ -13,6 +13,10 @@ h2 {
 	margin: 0 0 10px 0;
 }
 
+h3 {
+	margin: 0 0 5px 0;
+}
+
 a img {
 	border: none;
 }
@@ -180,4 +184,37 @@ td.status {
 
 #admin-content {
 	padding-left: 10px;
+}
+
+#package {
+	width: 100%;	
+}
+
+#package td {
+	vertical-align: top;
+	width: 50%;
+}
+
+.package-section {
+	
+}
+
+.section-content {
+	margin-left: 20px;	
+}
+
+.package-form {
+	display: inline-block;	
+}
+
+/* form:checkboxes makes spans which cause unwanted wrapping 
+ * change to a block element
+ */
+.package-form span {
+	display: block;	
+}
+
+.package-form-submit {
+	text-align: center;
+	margin-top: 10px;
 }
