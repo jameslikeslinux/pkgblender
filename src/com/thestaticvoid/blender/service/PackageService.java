@@ -67,19 +67,11 @@ public class PackageService {
 		
 		for (String dependency : branch.getDependencies()) {
 			List<Os> branchOses = new ArrayList<Os>(branch.getOses());
-			List<Os> depInOses = packageDao.getOsesContainingLegacy(dependency);
-			
-			for (int i = 0; i < 2; i++) {
-				Logger.getLogger(getClass()).info("BRANCH: " + branchOses.get(i).getId());
-				Logger.getLogger(getClass()).info("OS    : " + depInOses.get(i).getId());
-			}
-			
+			List<Os> depInOses = packageDao.getOsesContainingLegacy(dependency);			
 			branchOses.removeAll(depInOses);
 			
-			for (int i = 0; i < 2; i++) {
-				Logger.getLogger(getClass()).info("BRANCH: " + branchOses.get(i).getId());
-				Logger.getLogger(getClass()).info("OS    : " + depInOses.get(i).getId());
-			}
+			Logger.getLogger(getClass()).info("BRANCH: " + branchOses.size());
+			Logger.getLogger(getClass()).info("DEP: " + depInOses.size());
 			
 			if (!branch.getOses().isEmpty() && branchOses.isEmpty())
 				continue;

@@ -115,8 +115,61 @@ public class Os {
 	public void addPackage(OsPackage pkg) {
 		packages.add(pkg);
 	}
-	
-	public boolean equals(Os os) {
-		return id == os.id;
+
+	/*
+	 * Generated functions
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((branch == null) ? 0 : branch.hashCode());
+		result = prime * result
+				+ ((lastUpdated == null) ? 0 : lastUpdated.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((publisher == null) ? 0 : publisher.hashCode());
+		result = prime * result + ((slug == null) ? 0 : slug.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Os other = (Os) obj;
+		if (branch == null) {
+			if (other.branch != null)
+				return false;
+		} else if (!branch.equals(other.branch))
+			return false;
+		if (lastUpdated == null) {
+			if (other.lastUpdated != null)
+				return false;
+		} else if (!lastUpdated.equals(other.lastUpdated))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (publisher == null) {
+			if (other.publisher != null)
+				return false;
+		} else if (!publisher.equals(other.publisher))
+			return false;
+		if (slug == null) {
+			if (other.slug != null)
+				return false;
+		} else if (!slug.equals(other.slug))
+			return false;
+		if (status != other.status)
+			return false;
+		return true;
 	}
 }
