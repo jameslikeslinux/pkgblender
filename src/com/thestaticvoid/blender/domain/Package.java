@@ -26,7 +26,7 @@ public class Package {
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 	
-	@OneToMany(mappedBy="pkg", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pkg", cascade = CascadeType.ALL)
 	private Set<Branch> branches = new HashSet<Branch>();
 	
 	@ManyToOne
@@ -36,6 +36,9 @@ public class Package {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "validation_id")
 	private Validation validation;
+	
+	@OneToMany(mappedBy = "pkg", cascade = CascadeType.ALL)
+	private Set<Comment> comments = new HashSet<Comment>();
 
 	public int getId() {
 		return id;
@@ -71,5 +74,9 @@ public class Package {
 	
 	public void addBranch(Branch branch) {
 		branches.add(branch);
+	}
+
+	public Set<Comment> getComments() {
+		return comments;
 	}
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.thestaticvoid.blender.domain.Branch;
+import com.thestaticvoid.blender.domain.Comment;
 import com.thestaticvoid.blender.domain.GenericDao;
 import com.thestaticvoid.blender.domain.Os;
 import com.thestaticvoid.blender.domain.Package;
@@ -116,5 +117,19 @@ public class PackageService {
 			}
 		
 		branch.setOses(oses);
+	}
+	
+	@Transactional
+	public void addComment(String packageName, String comment) {
+		Package pkg = getPackage(packageName);
+		
+		if (pkg == null || comment == null || comment.length() == 0 || comment.length() > 1000)
+			return;
+		
+		Comment commentEntity = new Comment();
+		commentEntity.setComment(comment);
+		commentEntity.setPackage(pkg);
+		commentEntity.setUser(Utils.getCachedUser());
+		genericDao.store(commentEntity);
 	}
 }

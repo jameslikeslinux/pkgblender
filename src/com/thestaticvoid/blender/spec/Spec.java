@@ -26,32 +26,15 @@ public class Spec {
 	}
 	
 	private String getSpecDir() {
-		return Utils.SPECS_DIR + "/" + packageName;
+		return Utils.SPECS_DIR;
 	}
 	
 	private String getSpecFile() {
 		return getSpecDir() + "/" + packageName + ".spec";
 	}
 	
-	public static Spec newSpec(String packageName) throws IOException {
-		Spec spec = new Spec(packageName);
-		
-		if (new File(spec.getSpecDir()).exists())
-			try {
-				if (Runtime.getRuntime().exec("/usr/bin/svn rm --force " + spec.getSpecDir()).waitFor() != 0)
-					throw new Exception();
-			} catch (Exception e) {
-				throw new IOException("Could not remove " + spec.getSpecDir());
-			}
-		
-		try {
-			if (Runtime.getRuntime().exec("/usr/bin/svn cp " + Utils.SPECS_DIR + "/TEMPLATE " + spec.getSpecDir()).waitFor() != 0)
-				throw new Exception();
-		} catch (Exception e) {
-			throw new IOException("Could not copy template spec dir.");
-		}
-		
-		return spec;
+	public static Spec newSpec(String packageName) {
+		return new Spec(packageName);
 	}
 	
 	public static Spec loadSpec(String packageName) {
@@ -123,7 +106,7 @@ public class Spec {
 	}
 	
 	public void commit() {
-		commit("Initial upload.");
+		commit(packageName + ": Initial upload.");
 	}
 	
 	public void commit(String message) {

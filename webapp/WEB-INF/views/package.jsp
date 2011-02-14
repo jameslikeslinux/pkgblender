@@ -7,24 +7,24 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:import url="header.jsp">
-	<c:param name="title">Package - ${package.name}</c:param>
+	<c:param name="title">Package - ${pkg.name}</c:param>
 </c:import>
 
-<h1>Package '${package.name}'</h1>
+<h1>Package '${pkg.name}'</h1>
 
 <table id="package">
 	<tr>
 		<td>
 			<div class="package-section">
 				<h3>Maintainer</h3>
-				<div class="section-content">${package.maintainer.name}</div>
+				<div class="section-content">${pkg.maintainer.name}</div>
 			</div>
 			<br />
 			<div class="package-section">
 				<h3>Files</h3>
 				<div class="section-content">
 					<c:forEach var="file" items="${files}">
-						<a href="<c:url value="${package.name}/files/${file.name}" />">${file.name}</a><br />
+						<a href="<c:url value="${pkg.name}/files/${file.name}" />">${file.name}</a><br />
 					</c:forEach>
 				</div>
 			</div>
@@ -34,7 +34,7 @@
 				<div class="section-content">
 					<c:choose>
 						<c:when test="${canModifyPackage}">
-							<form:form modelAttribute="osesForm" action="${package.name}/branches/${branch.name}/changeOses">
+							<form:form modelAttribute="osesForm" action="${pkg.name}/branches/${branch.name}/changeOses">
 								<div class="package-form">
 									<form:checkboxes items="${osesForm.availableOses}" path="oses" />
 									<div class="package-form-submit"><input type="submit" value="Change" /></div>
@@ -75,6 +75,22 @@
 		
 		<td>
 			<h3>Comments</h3>
+			<div class="section-content">
+				<sec:authorize access="not isAuthenticated()">
+					<c:if test="${empty comments}">
+						None
+					</c:if>
+				</sec:authorize>
+				<sec:authorize access="isAuthenticated()">
+					<c:forEach var="comment" items="${pkg.comments}">
+						${comment.comment}<br />
+					</c:forEach>
+					<form action="${pkg.name}/addComment" method="post">
+						<textarea name="comment" style="width: 100%" rows="4"></textarea>
+						<div class="package-form-submit"><input type="submit" value="Post" /></div>
+					</form>
+				</sec:authorize>
+			</div>
 		</td>
 	</tr>
 </table>

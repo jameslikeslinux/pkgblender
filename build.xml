@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:ivy="antlib:org.apache.ivy.ant" name="blender" default="compile">
-	<property name="ivy.install.version" value="2.1.0"/>
+	<property name="ivy.install.version" value="2.2.0"/>
 	<property name="ivy.jar.file" value="ivy.jar" />
 	<property name="src.dir" value="src" />
 	<property name="resources.dir" value="resources" />
